@@ -1,0 +1,38 @@
+import requests
+from bs4 import BeautifulSoup
+import csv
+
+# Define the URL of the website you want to scrape
+url = 'https://example.com'
+
+# Send an HTTP GET request to the URL
+response = requests.get(url)
+
+# Check if the request was successful
+if response.status_code == 200:
+    
+    soup = BeautifulSoup(response.text, 'html.parser')
+
+    # Find the data you want to scrape by inspecting the HTML structure of the page
+    # For example, let's say we want to scrape a list of titles from <h1> tags
+    titles = []
+    for h1_tag in soup.find_all('h1'):
+        titles.append(h1_tag.text)
+
+    # Specify the name of the CSV file where you want to save the data
+    csv_file = 'scraped_data.csv'
+
+    # Open the CSV file in write mode and write the data
+    with open(csv_file, 'w', newline='') as file:
+        writer = csv.writer(file)
+        
+        # Write a header row if needed
+        # writer.writerow(['Title'])  # Uncomment this line if you want a header row
+        
+        # Write the scraped data to the CSV file
+        for title in titles:
+            writer.writerow([title])
+    
+    print(f'Data has been scraped and saved to {csv_file}')
+else:
+    print('Failed to retrieve the web page')
